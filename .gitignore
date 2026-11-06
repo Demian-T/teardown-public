@@ -1,0 +1,6 @@
+node_modules/
+# Profils Chrome par domaine: contiennent les sessions connectées.
+.cookies/
+# Captures et rapports des sites analysés.
+output/
+.DS_Store

@@ -1,0 +1,13 @@
+{
+  "name": "teardown",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "teardown": "node teardown.mjs",
+    "teardown:login": "node teardown-login.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.52.0"
+  }
+}
