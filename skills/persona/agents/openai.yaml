@@ -1,0 +1,4 @@
+interface:
+  display_name: "Persona"
+  short_description: "Simuler un parcours utilisateur selon un persona"
+  default_prompt: "Utilise $persona pour créer un profil local et tester son objectif dans le navigateur."

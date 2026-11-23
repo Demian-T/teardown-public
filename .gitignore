@@ -2,5 +2,17 @@ node_modules/
 # Profils Chrome par domaine: contiennent les sessions connectées.
 .cookies/
 # Captures et rapports des sites analysés.
-output/
+/output
+# Personas, scénarios, journaux, captures et profils de test privés.
+/.local/
+/personas/
+/persona-runs/
+# Les vidéos de parcours restent locales, même en cas d’export près du code.
+*.mp4
+*.webm
+*.mov
+*.mkv
+*.avi
+*.mp4.part
+*.webm.part
 .DS_Store

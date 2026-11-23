@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "",
+  "name": "",
+  "context": "",
+  "goal": "",
+  "profile": {
+    "digitalExperience": "",
+    "priorKnowledge": ""
+  },
+  "behavior": {
+    "reading": "",
+    "navigation": "",
+    "decisionCriteria": [],
+    "avoidances": [],
+    "recovery": ""
+  },
+  "scenario": {
+    "startUrl": "",
+    "device": "desktop",
+    "allowedOrigins": [],
+    "maxActions": 15,
+    "maxMinutes": 10,
+    "maxConsecutiveFailures": 2,
+    "allowFormInput": false,
+    "successCriteria": []
+  },
+  "assumptions": []
+}
