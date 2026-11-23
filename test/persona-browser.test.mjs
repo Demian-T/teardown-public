@@ -12,7 +12,7 @@ test('navigateur : cible visible, observation courante et arrêt avant envoi', {
   const server = createServer((request, response) => {
     if (request.method === 'POST') submissions++
     response.setHeader('Content-Type', 'text/html; charset=utf-8')
-    response.end(request.url === '/popup' ? '<h1>Nouvel onglet</h1><form method="POST"><button>Envoyer la demande</button></form>' : '<h1>Offre de test</h1><a href="/popup" target="_blank">Ouvrir le détail</a><form method="POST"><button>Envoyer la demande</button></form><div style="margin-top:1800px"><a href="/hidden">Cible en bas</a><p>Texte hors écran</p></div>')
+    response.end(request.url === '/popup' ? '<h1>Nouvel onglet</h1><form method="POST"><button>Envoyer la demande</button></form>' : '<h1>Offre de test</h1><a href="/popup" target="_blank">Ouvrir le détail</a><form method="POST"><button>Envoyer la demande</button></form><button style="position:fixed;right:20px;top:650px">Masqué par le panneau</button><button style="position:fixed;left:500px;top:-30px;height:40px">Cible partielle</button><div style="position:fixed;right:0;top:600px;width:400px;height:200px;background:white;z-index:99">Panneau superposé</div><div style="margin-top:1800px"><a href="/hidden">Cible en bas</a><p>Texte hors écran</p></div>')
   })
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
   t.after(() => server.close())
@@ -27,6 +27,8 @@ test('navigateur : cible visible, observation courante et arrêt avant envoi', {
   const first = await browser.open({ headless: true })
   assert.ok(!first.elements.some(element => element.label === 'Cible en bas'))
   assert.ok(!first.text.includes('Texte hors écran'))
+  assert.ok(!first.elements.some(element => ['Masqué par le panneau', 'Cible partielle'].includes(element.label)))
+  assert.ok(!first.text.includes('Masqué par le panneau'))
   await assert.rejects(browser.act({ type: 'click', element: first.elements[0].ref, observationId: 'stale', reason: 'Lire', expectation: 'Détail' }), /périmée/)
   const popup = await browser.act({ type: 'click', element: first.elements.find(element => element.label === 'Ouvrir le détail').ref, observationId: first.id, reason: 'Lire le détail', expectation: 'Ouvrir le nouvel onglet' })
   assert.equal(popup.observation.url, `${origin}/popup`)
