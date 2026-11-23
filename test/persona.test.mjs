@@ -65,6 +65,10 @@ test('budgets, échecs et limite de périmètre arrêtent la progression', async
   const external = event(); external.after.url = 'https://other.example/'; external.status = 'boundary'
   await store.record(boundary, external)
   await assert.rejects(store.record(boundary, event()), /Limite rencontrée/)
+  const blank = await store.start(fixture(), 'codex')
+  const blankEvent = event(); blankEvent.after.url = 'about:blank'; blankEvent.status = 'boundary'
+  await store.record(blank, blankEvent)
+  assert.equal((await store.load(blank)).events[0].after.url, 'about:blank')
   const failures = await store.start(fixture(), 'codex')
   await store.record(failures, { ...event(), status: 'failed' })
   await store.record(failures, { ...event(), status: 'failed' })

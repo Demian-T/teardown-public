@@ -7,4 +7,12 @@ node_modules/
 /.local/
 /personas/
 /persona-runs/
+# Les vidéos de parcours restent locales, même en cas d’export près du code.
+*.mp4
+*.webm
+*.mov
+*.mkv
+*.avi
+*.mp4.part
+*.webm.part
 .DS_Store

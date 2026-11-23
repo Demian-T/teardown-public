@@ -9,6 +9,7 @@ Le crawl navigue et observe. Il ne soumet aucun formulaire et ne crée ni ne sup
 - Node.js (testé avec la version 25.2.1).
 - Google Chrome. Le chemin par défaut est celui de macOS. La variable `CHROME_BIN` permet d'en indiquer un autre.
 - `cwebp`, facultatif : sans lui, les captures restent en PNG et pèsent beaucoup plus lourd (`brew install webp`).
+- `ffmpeg`, pour la vidéo des parcours persona (`brew install ffmpeg`). `FFMPEG_BIN` permet d’en préciser le chemin. Le mode `--no-video` n’en a pas besoin.
 
 ## Installation
 
@@ -82,13 +83,30 @@ et les observations avant/après. Il ne choisit pas les actions et ne lance pas 
 d’IA. Le skill explique comment l’agent prend ces décisions, termine le bilan et compare
 les parcours. Chaque essai local utilise un nouveau profil Chrome.
 
+Le navigateur **enregistre aussi une vidéo MP4 continue par défaut**, dans
+`<dossier-essai>/recordings/journey.mp4`. Elle suit le viewport actif, y compris les
+animations, les défilements et les nouveaux onglets, sans audio ni capture des autres
+applications. Fermer la session avec `{"type":"close"}` ou Ctrl+C finalise le fichier.
+Le rapport contient un lecteur et des boutons pour revoir chaque action à son horodatage.
+`--no-video` désactive cet enregistrement. Un arrêt forcé du processus peut laisser un
+fichier `.part` non finalisé ; il n’est pas présenté comme une vidéo disponible.
+
 Pour **Claude in Chrome**, **Aside**, un navigateur **Codex** ou un agent **browser-use**,
 choisir le provider correspondant avec `start`, puis transférer le `BRIEF.md` généré à
 l’agent. Les [instructions d’adaptation](skills/persona/references/browser-adapters.md)
 décrivent le transfert et l’importation des preuves. Les outils du navigateur choisi
 doivent être disponibles ; le dépôt ne les installe pas.
 
-Les profils concrets, scénarios, briefs remplis, cookies, captures et résultats restent
+Pour joindre un enregistrement MP4 ou WebM réalisé par un outil externe :
+
+```bash
+npm run persona -- attach-video <dossier-essai> --file=<video.mp4>
+```
+
+Le fichier est copié dans le dossier privé et ajouté au lecteur du rapport. Aucun
+enregistrement n’est fabriqué à partir des captures de parcours déjà terminés.
+
+Les profils concrets, scénarios, briefs remplis, cookies, captures, vidéos et résultats restent
 dans `.local/persona/`, **ignoré par Git**. Seuls le skill, le modèle vide et le code sont
 versionnés. Avant publication : `npm run check:private`. Les simulations décrivent des
 hypothèses de comportement ; elles ne remplacent pas des tests avec des utilisateurs.
@@ -112,6 +130,9 @@ preuves nécessaires aux résultats.
 
 Avec Chrome installé, `RUN_BROWSER_TESTS=1 npm test` vérifie aussi la navigation réelle,
 les nouveaux onglets, le viewport et l’arrêt avant une soumission sur un serveur local.
+Avec FFmpeg et FFprobe installés, `RUN_BROWSER_TESTS=1 RUN_VIDEO_TESTS=1 npm test` vérifie
+également l’animation captée entre deux actions, la durée réelle, le changement d’onglet,
+la lecture du MP4 et la finalisation sur interruption du CLI.
 
 Les emplacements de découverte sont décrits dans les documentations officielles
 [Claude Code](https://code.claude.com/docs/en/skills) et

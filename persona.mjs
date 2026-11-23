@@ -40,13 +40,20 @@ export async function main(argv = process.argv.slice(2)) {
     console.log(JSON.stringify(command === 'record' ? await store.record(resolve(positional[0]), value) : await store.finish(resolve(positional[0]), value), null, 2))
   } else if (command === 'compare') {
     console.log(await store.compare(positional.map(path => resolve(path))))
+  } else if (command === 'attach-video') {
+    if (!positional[0] || !flags.file) throw new Error('Usage : persona attach-video <dossier-essai> --file=<video.mp4|video.webm>')
+    console.log(JSON.stringify(await store.attachRecording(resolve(positional[0]), resolve(flags.file)), null, 2))
   } else if (command === 'browser') {
     if (!positional[0]) throw new Error('Dossier d’essai requis')
     const browser = new PersonaBrowser(store, resolve(positional[0]))
     const lines = createInterface({ input: process.stdin, crlfDelay: Infinity })
+    let interrupted = false
+    const stop = () => { interrupted = true; lines.close() }
+    process.on('SIGINT', stop)
+    process.on('SIGTERM', stop)
     try {
-      console.log(JSON.stringify({ ready: true, observation: await browser.open({ headless: !!flags.headless }) }))
-      for await (const line of lines) {
+      console.log(JSON.stringify({ ready: true, observation: await browser.open({ headless: !!flags.headless, video: !flags['no-video'] }) }))
+      if (!interrupted) for await (const line of lines) {
         if (!line.trim()) continue
         try {
           const action = JSON.parse(line)
@@ -54,13 +61,20 @@ export async function main(argv = process.argv.slice(2)) {
           console.log(JSON.stringify(await browser.act(action)))
         } catch (error) { console.log(JSON.stringify({ error: error.message })) }
       }
-    } finally { lines.close(); await browser.close() }
+    } finally {
+      lines.close()
+      try {
+        await browser.close()
+        console.log(JSON.stringify({ closed: true, recording: (await store.load(positional[0])).recording || null }))
+      } finally { process.off('SIGINT', stop); process.off('SIGTERM', stop) }
+    }
   } else {
     console.log(`persona create <id>
 persona validate <persona.json>
 persona start <persona.json> --provider=${PROVIDERS.join('|')}
 persona brief <dossier-essai>
-persona browser <dossier-essai> [--headless]  # une action JSON par ligne sur stdin
+persona browser <dossier-essai> [--headless] [--no-video]  # une action JSON par ligne sur stdin
+persona attach-video <dossier-essai> --file=<video.mp4|video.webm>
 persona record <dossier-essai> --event=<event.json>
 persona finish <dossier-essai> --result=<result.json>
 persona compare <dossier-essai> [autres-dossiers...]

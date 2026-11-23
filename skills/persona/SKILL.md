@@ -64,6 +64,10 @@ sont partagés. Ne pas remplacer un moteur absent sans signaler le changement.
    deviner une URL, inspecter le code ou rechercher une route cachée.
 3. Consigner avant/après, capture, raison, attente et résultat. Un échec, un retour en
    arrière et un abandon font partie du résultat. Revoir l’écran après chaque action.
+   Le navigateur local enregistre aussi une vidéo continue par défaut. Fermer sa session
+   avant le bilan pour finaliser le MP4 ; ne pas reconstruire une vidéo prétendument
+   continue à partir de captures anciennes. Pour un outil externe, joindre son véritable
+   enregistrement s’il est disponible, sinon signaler l’absence de vidéo.
 4. Respecter les origines et les budgets du scénario. À un lien extérieur, un captcha,
    une connexion nécessaire ou une action de validation, consigner la limite atteinte.
 5. Arrêter quand l’objectif est atteint, que le persona abandonnerait selon son scénario,
@@ -89,5 +93,5 @@ population. Signaler les effets de session, les hypothèses et toute connaissanc
 préalable du site par le testeur.
 
 Avant de publier le code : `npm run check:private` et vérifier les fichiers indexés.
-Les personas, briefs remplis, captures, journaux, profils et rapports restent dans
+Les personas, briefs remplis, captures, vidéos, journaux, profils et rapports restent dans
 `.local/persona/` (ou dans une copie de livrable locale hors du dépôt).

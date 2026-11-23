@@ -1,6 +1,7 @@
 # Navigateur local piloté par l’agent
 
-Prérequis : ceux du dépôt (`npm install`, Google Chrome ou `CHROME_BIN`). Aucun modèle
+Prérequis : ceux du dépôt (`npm install`, Google Chrome ou `CHROME_BIN`), et FFmpeg pour
+la vidéo (ou `FFMPEG_BIN`). `--no-video` permet un essai sans vidéo. Aucun modèle
 n’est exécuté par le CLI. L’agent de la conversation lit le brief et choisit les actions.
 
 `start` imprime le dossier d’essai. Lire son `BRIEF.md`, puis lancer :
@@ -38,6 +39,15 @@ les liens hors périmètre. Ce filtre réduit les erreurs ; il ne prouve pas l�
 d’effet de bord d’un bouton JavaScript mal étiqueté. L’agent doit choisir seulement des
 actions de navigation ou de consultation. Les blocages restent dans le journal.
 
+Un onglet encore vide ne bloque pas l’observation d’un autre onglet chargé. `back`
+ferme un nouvel onglet sans historique utile pour revenir à son onglet d’origine ;
+sans historique ni origine disponible, l’action est signalée comme échouée.
+
+L’intention est conservée avant l’interaction. Si la capture suivante échoue, le journal
+indique une observation indisponible sans inventer d’image ; terminer l’essai. Si
+l’écriture échoue après une action, consulter `run.json` et son éventuel `pendingAction`.
+Ne pas rejouer le geste pour tenter de réparer le journal.
+
 Après `close`, préparer un bilan JSON dans le dossier privé :
 
 ```json
@@ -58,6 +68,17 @@ npm run persona -- compare <dossier-essai-1> <dossier-essai-2>
 ```
 
 Chaque essai a un `run.json`, un brief figé, les captures et une galerie `index.html`.
+La vidéo continue est enregistrée en MP4 dans `recordings/journey.mp4`, à 10 images/s,
+sans audio. Elle couvre le viewport de l’onglet utilisé par le persona et suit les
+nouveaux onglets adoptés, pas les autres applications du bureau. Les attentes et les
+animations sont enregistrées, même sans action du persona. `videoTimeSeconds` relie
+chaque action au début de cette vidéo ; les boutons du rapport déplacent le lecteur.
+
+Fermer avec `{"type":"close"}`, une fin de stdin, Ctrl+C ou SIGTERM finalise le fichier
+avant le bilan. La commande `finish` refuse un essai dont l’enregistrement est encore
+en cours. Un SIGKILL ou une panne peut laisser un `.part` non finalisé. Un échec de
+capture ou d’encodage est signalé ; ne pas le présenter comme une vidéo complète.
+
 La comparaison crée une page locale qui pointe vers les galeries. Les budgets incluent
 le temps de réflexion de l’agent. Le profil Chrome est neuf pour chaque essai. La reprise
 d’un navigateur interrompu exige un nouvel essai ; aucune action n’est rejouée en secret.

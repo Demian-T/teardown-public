@@ -24,7 +24,7 @@ test('navigateur : cible visible, observation courante et arrêt avant envoi', {
   const directory = await store.start(persona, 'playwright')
   const browser = new PersonaBrowser(store, directory)
   t.after(() => browser.close())
-  const first = await browser.open({ headless: true })
+  const first = await browser.open({ headless: true, video: false })
   assert.ok(!first.elements.some(element => element.label === 'Cible en bas'))
   assert.ok(!first.text.includes('Texte hors écran'))
   assert.ok(!first.elements.some(element => ['Masqué par le panneau', 'Cible partielle'].includes(element.label)))

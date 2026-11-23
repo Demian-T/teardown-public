@@ -64,4 +64,24 @@ de l’eau pour que les budgets restent utiles. Ne pas relancer une action seule
 remplir le journal, notamment à proximité d’une validation.
 
 Terminer avec `finish` et le bilan décrit dans [local-browser.md](local-browser.md).
-Les fichiers importés, briefs remplis et captures restent dans `.local/persona/`.
+
+## Joindre la vidéo d’un outil externe
+
+Si l’agent navigateur ou son environnement permet un véritable enregistrement, le
+démarrer avant le parcours et l’arrêter à la fin. Le dépôt ne peut pas activer à distance
+un enregistreur absent de cet outil. Signaler l’absence de cette capacité lorsqu’elle
+empêche de fournir la vidéo demandée ; conserver les captures existantes comme telles.
+
+Copier le résultat MP4 ou WebM avec :
+
+```bash
+npm run persona -- attach-video <dossier-essai> --file=<enregistrement.mp4>
+```
+
+L’import fonctionne aussi après le bilan. Il ajoute un lecteur au rapport sans modifier
+les actions ni les critères. La copie reste privée. Pour des liens de lecture par étape,
+fournir `videoTimeSeconds` dans chaque événement avec son véritable décalage en secondes
+depuis le début de ce même enregistrement. Ne pas calculer ces décalages depuis une
+autre horloge, une vidéo recoupée ou les captures seules.
+
+Les fichiers importés, briefs remplis, captures et vidéos restent dans `.local/persona/`.
