@@ -2,5 +2,9 @@ node_modules/
 # Profils Chrome par domaine: contiennent les sessions connectées.
 .cookies/
 # Captures et rapports des sites analysés.
-output/
+/output
+# Personas, scénarios, journaux, captures et profils de test privés.
+/.local/
+/personas/
+/persona-runs/
 .DS_Store

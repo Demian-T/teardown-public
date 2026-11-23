@@ -62,3 +62,57 @@ Les profils sont dans `.cookies/teardown/<domaine>`. Ils contiennent des session
 ## Utilisation par un agent
 
 `skill/SKILL.md` décrit le parcours complet pour un agent : crawl, point de contrôle, puis analyse du rapport selon `skill/references/analysis-grid.md`. Les règles d'exclusion des pages sont expliquées dans `skill/references/exclusions.md`.
+
+## Parcours pilotés par persona
+
+Le skill [`/persona`](skills/persona/SKILL.md) crée un profil comportemental et teste
+son objectif sur le site, une action observée à la fois. Il complète le crawl global :
+les actions sont choisies par l’agent selon les connaissances et les critères du persona.
+
+```bash
+npm run persona -- create mon-persona
+# Compléter le JSON créé dans .local/persona/personas/, puis :
+npm run persona -- validate .local/persona/personas/mon-persona.json
+npm run persona -- start .local/persona/personas/mon-persona.json --provider=playwright
+npm run persona -- browser <dossier-essai> --headless
+```
+
+Le CLI navigateur reçoit une action JSON par ligne et conserve les captures, les raisons
+et les observations avant/après. Il ne choisit pas les actions et ne lance pas de modèle
+d’IA. Le skill explique comment l’agent prend ces décisions, termine le bilan et compare
+les parcours. Chaque essai local utilise un nouveau profil Chrome.
+
+Pour **Claude in Chrome**, **Aside**, un navigateur **Codex** ou un agent **browser-use**,
+choisir le provider correspondant avec `start`, puis transférer le `BRIEF.md` généré à
+l’agent. Les [instructions d’adaptation](skills/persona/references/browser-adapters.md)
+décrivent le transfert et l’importation des preuves. Les outils du navigateur choisi
+doivent être disponibles ; le dépôt ne les installe pas.
+
+Les profils concrets, scénarios, briefs remplis, cookies, captures et résultats restent
+dans `.local/persona/`, **ignoré par Git**. Seuls le skill, le modèle vide et le code sont
+versionnés. Avant publication : `npm run check:private`. Les simulations décrivent des
+hypothèses de comportement ; elles ne remplacent pas des tests avec des utilisateurs.
+
+Les liens de projet `.claude/skills/persona` et `.agents/skills/persona` rendent le même
+skill découvrable dans Claude Code (`/persona`) et Codex (`$persona`). Si une copie du
+dépôt ne préserve pas les liens symboliques, les recréer depuis sa racine :
+
+```bash
+# Claude Code : découverte de /persona dans ce projet
+mkdir -p .claude/skills
+ln -s ../../skills/persona .claude/skills/persona
+# Codex : découverte de $persona dans ce projet
+mkdir -p .agents/skills
+ln -s ../../skills/persona .agents/skills/persona
+```
+
+Claude in Chrome seul reçoit le brief dans la conversation ; il ne charge pas ces
+dossiers de projet. `npm test` vérifie le stockage privé, les limites d’action et les
+preuves nécessaires aux résultats.
+
+Avec Chrome installé, `RUN_BROWSER_TESTS=1 npm test` vérifie aussi la navigation réelle,
+les nouveaux onglets, le viewport et l’arrêt avant une soumission sur un serveur local.
+
+Les emplacements de découverte sont décrits dans les documentations officielles
+[Claude Code](https://code.claude.com/docs/en/skills) et
+[Codex](https://learn.chatgpt.com/docs/build-skills).

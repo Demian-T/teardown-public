@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "teardown": "node teardown.mjs",
-    "teardown:login": "node teardown-login.mjs"
+    "teardown:login": "node teardown-login.mjs",
+    "persona": "node persona.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check:private": "node scripts/check-private-files.mjs"
   },
   "dependencies": {
     "playwright": "^1.52.0"
