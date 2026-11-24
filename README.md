@@ -137,3 +137,7 @@ la lecture du MP4 et la finalisation sur interruption du CLI.
 Les emplacements de découverte sont décrits dans les documentations officielles
 [Claude Code](https://code.claude.com/docs/en/skills) et
 [Codex](https://learn.chatgpt.com/docs/build-skills).
+
+## Licence
+
+MIT, voir [LICENSE](LICENSE).
